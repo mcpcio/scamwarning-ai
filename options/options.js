@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     chrome.permissions.contains({ origins: ['<all_urls>'] }, resolve);
   });
 
-  if (hasAllUrls && settings.alwaysOn) {
+  if (settings.alwaysOn !== false) {
     modeAlways.checked = true;
     permissionStatus.textContent = 'Permission granted. Always-on protection is active.';
     permissionStatus.className = 'permission-note granted';
