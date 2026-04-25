@@ -1,0 +1,22 @@
+name = "scamwarning-api"
+main = "src/worker.js"
+compatibility_date = "2026-04-25"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+VECTORMIND_URL = "https://vector.mcpcio.com"
+
+# KV namespaces — create via: wrangler kv:namespace create <NAME>
+# Then paste the id values here
+# [[kv_namespaces]]
+# binding = "CACHE"
+# id = "REPLACE_WITH_KV_ID"
+
+# [[kv_namespaces]]
+# binding = "RATE_LIMITS"
+# id = "REPLACE_WITH_KV_ID"
+
+# Secrets — set via: wrangler secret put <NAME>
+# Required secrets:
+#   ANTHROPIC_API_KEY
+#   WORKER_SECRET
