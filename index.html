@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScamWarning — AI-Powered Scam Detection</title>
+    <meta name="description" content="Free Chrome extension that detects scams, phishing, and fraud on every page you visit. AI-powered. Private. Open source.">
+    <meta property="og:title" content="ScamWarning by MCPCIO">
+    <meta property="og:description" content="AI-powered scam detection for every page you visit. Free. Private. Open source.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://scamwarning.ai">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #e5e5e5;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+        /* Header */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid #1a1a1a;
+        }
+        .header-inner {
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #e5e5e5; }
+        .logo-icon { width: 32px; height: 32px; }
+        .logo-text { font-size: 18px; font-weight: 700; }
+        .logo-text span { color: #f59e0b; }
+        .header-links { display: flex; gap: 24px; }
+        .header-links a { color: #888; text-decoration: none; font-size: 14px; }
+        .header-links a:hover { color: #f59e0b; }
+
+        /* Hero */
+        .hero { padding: 80px 0 60px; text-align: center; }
+        .hero h1 { font-size: 3rem; font-weight: 800; line-height: 1.2; margin-bottom: 20px; }
+        .hero h1 span { color: #f59e0b; }
+        .hero .subtitle { font-size: 1.25rem; color: #999; max-width: 560px; margin: 0 auto 40px; }
+        .cta-group { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 28px; border-radius: 8px; font-size: 16px;
+            font-weight: 600; text-decoration: none; transition: opacity 0.15s;
+        }
+        .btn:hover { opacity: 0.85; }
+        .btn-primary { background: #f59e0b; color: #0a0a0a; }
+        .btn-secondary { background: #1a1a1a; color: #e5e5e5; border: 1px solid #333; }
+
+        /* States */
+        .states { padding: 60px 0; }
+        .states-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .state-card {
+            background: #111; border: 1px solid #1a1a1a; border-radius: 12px;
+            padding: 32px 24px; text-align: center;
+        }
+        .state-dot { width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 16px; }
+        .state-dot.green { background: #22c55e; box-shadow: 0 0 20px #22c55e40; }
+        .state-dot.yellow { background: #f59e0b; box-shadow: 0 0 20px #f59e0b40; }
+        .state-dot.red { background: #ef4444; box-shadow: 0 0 20px #ef444440; }
+        .state-card h3 { font-size: 18px; margin-bottom: 8px; }
+        .state-card p { font-size: 14px; color: #888; }
+
+        /* Features */
+        .features { padding: 60px 0; }
+        .features h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 32px; text-align: center; }
+        .feature-list { display: grid; gap: 16px; }
+        .feature-item {
+            display: flex; gap: 16px; align-items: flex-start;
+            background: #111; border: 1px solid #1a1a1a; border-radius: 8px; padding: 20px;
+        }
+        .feature-check { color: #22c55e; font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+        .feature-item h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+        .feature-item p { font-size: 13px; color: #888; }
+
+        /* Privacy */
+        .privacy-section {
+            padding: 60px 0; text-align: center;
+            border-top: 1px solid #1a1a1a;
+        }
+        .privacy-section h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 12px; }
+        .privacy-section .subtitle { color: #888; margin-bottom: 32px; }
+        .privacy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; text-align: left; }
+        .privacy-card {
+            background: #111; border: 1px solid #1a1a1a; border-radius: 8px; padding: 20px;
+        }
+        .privacy-card h4 { font-size: 14px; margin-bottom: 8px; }
+        .privacy-card.never h4 { color: #22c55e; }
+        .privacy-card ul { list-style: none; padding: 0; }
+        .privacy-card li { font-size: 13px; color: #888; padding: 3px 0; }
+
+        /* Footer */
+        footer {
+            padding: 40px 0; border-top: 1px solid #1a1a1a;
+            text-align: center;
+        }
+        footer p { font-size: 13px; color: #666; }
+        footer a { color: #f59e0b; text-decoration: none; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .states-grid { grid-template-columns: 1fr; }
+            .privacy-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <img src="assets/icons/icon-default-48.png" alt="ScamWarning" class="logo-icon">
+                <span class="logo-text">Scam<span>Warning</span></span>
+            </a>
+            <div class="header-links">
+                <a href="https://github.com/mcpcio/scamwarning-ai">GitHub</a>
+                <a href="/privacy">Privacy</a>
+                <a href="https://mcpcio.com">MCPCIO</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>AI scam detection for<br>every page you <span>visit</span></h1>
+                <p class="subtitle">Free Chrome extension that warns you about phishing, fraud, and scam sites. No data collection. No ads. Open source.</p>
+                <div class="cta-group">
+                    <a href="#" class="btn btn-primary">Add to Chrome — Free</a>
+                    <a href="https://github.com/mcpcio/scamwarning-ai" class="btn btn-secondary">View Source</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="states">
+            <div class="container">
+                <div class="states-grid">
+                    <div class="state-card">
+                        <div class="state-dot green"></div>
+                        <h3>Safe</h3>
+                        <p>No threats detected. Browse with confidence.</p>
+                    </div>
+                    <div class="state-card">
+                        <div class="state-dot yellow"></div>
+                        <h3>Moderate</h3>
+                        <p>Some suspicious patterns found. Review before proceeding.</p>
+                    </div>
+                    <div class="state-card">
+                        <div class="state-dot red"></div>
+                        <h3>Threat</h3>
+                        <p>Significant scam indicators detected. Exercise caution.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2>What ScamWarning detects</h2>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="feature-check">&#10003;</span>
+                        <div>
+                            <h4>Phishing &amp; credential harvesting</h4>
+                            <p>Fake login pages, account verification scams, and credential theft attempts</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">&#10003;</span>
+                        <div>
+                            <h4>Financial fraud &amp; investment scams</h4>
+                            <p>Guaranteed returns, crypto doubling schemes, fake trading platforms</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">&#10003;</span>
+                        <div>
+                            <h4>Tech support scams</h4>
+                            <p>Fake virus warnings, fraudulent support numbers, scare tactics</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">&#10003;</span>
+                        <div>
+                            <h4>Brand &amp; government impersonation</h4>
+                            <p>Fake IRS, bank, and brand websites designed to steal your information</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">&#10003;</span>
+                        <div>
+                            <h4>Urgency manipulation &amp; misleading ads</h4>
+                            <p>Countdown timers, fake scarcity, deceptive health claims, too-good-to-be-true offers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="privacy-section">
+            <div class="container">
+                <h2>Privacy by design</h2>
+                <p class="subtitle">We built ScamWarning to prove security tools don't need your data.</p>
+                <div class="privacy-grid">
+                    <div class="privacy-card">
+                        <h4>How it works</h4>
+                        <ul>
+                            <li>Local pattern matching runs first — no network call</li>
+                            <li>API only contacted when threats are detected</li>
+                            <li>Results cached locally for 1 hour</li>
+                            <li>Anonymous install ID for rate limiting only</li>
+                        </ul>
+                    </div>
+                    <div class="privacy-card never">
+                        <h4>We never collect</h4>
+                        <ul>
+                            <li>Browsing history or page visits</li>
+                            <li>Personal information or accounts</li>
+                            <li>Passwords, cookies, or form data</li>
+                            <li>IP addresses (not logged)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>ScamWarning is a free, open-source project by <a href="https://mcpcio.com">MCPCIO</a>.</p>
+            <p style="margin-top: 8px;"><a href="/privacy">Privacy Policy</a></p>
+        </div>
+    </footer>
+</body>
+</html>
