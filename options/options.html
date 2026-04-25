@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="options.css">
+  <title>ScamWarning Settings</title>
+</head>
+<body>
+  <div class="options-container">
+    <header class="options-header">
+      <img src="../assets/icons/icon-default-48.png" alt="ScamWarning" class="header-icon">
+      <div>
+        <h1 class="header-title">ScamWarning Settings</h1>
+        <p class="header-subtitle">Configure your scam protection preferences</p>
+      </div>
+    </header>
+
+    <section class="settings-section">
+      <h2 class="section-title">Protection Mode</h2>
+      <div class="option-card">
+        <div class="option-row">
+          <div>
+            <label class="option-label" for="mode-click">Click to Scan</label>
+            <p class="option-desc">Scan pages when you click the ScamWarning icon. No automatic data sent.</p>
+          </div>
+          <input type="radio" name="protection-mode" id="mode-click" value="click" checked>
+        </div>
+      </div>
+      <div class="option-card">
+        <div class="option-row">
+          <div>
+            <label class="option-label" for="mode-always">Always-On Protection</label>
+            <p class="option-desc">Automatically scan every page you visit. Requires additional browser permission.</p>
+          </div>
+          <input type="radio" name="protection-mode" id="mode-always" value="always">
+        </div>
+        <p id="permission-status" class="permission-note hidden"></p>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h2 class="section-title">Display</h2>
+      <div class="option-card">
+        <div class="option-row">
+          <label class="option-label" for="show-badge">Show badge on icon</label>
+          <input type="checkbox" id="show-badge" checked>
+        </div>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h2 class="section-title">Trusted Domains</h2>
+      <p class="section-desc">Domains you trust will always show as safe without being scanned.</p>
+      <div class="option-card">
+        <div class="whitelist-input-row">
+          <input type="text" id="whitelist-input" class="form-input" placeholder="example.com">
+          <button id="whitelist-add" class="btn btn-primary btn-small">Add</button>
+        </div>
+        <ul id="whitelist-list" class="whitelist-list"></ul>
+        <p id="whitelist-empty" class="whitelist-empty">No trusted domains added.</p>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h2 class="section-title">How ScamWarning Works</h2>
+      <div class="option-card privacy-card">
+        <div class="data-flow">
+          <div class="flow-step">
+            <span class="flow-icon">1</span>
+            <div>
+              <strong>Local Analysis</strong>
+              <p>ScamWarning runs pattern matching on the page content entirely within your browser. No data leaves your device at this step.</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <span class="flow-icon">2</span>
+            <div>
+              <strong>API Lookup (if needed)</strong>
+              <p>If local patterns detect suspicious signals, the page domain and extracted signals are sent to our assessment API. Full page content is sent only when no cached assessment exists.</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <span class="flow-icon">3</span>
+            <div>
+              <strong>Assessment Result</strong>
+              <p>The result is cached locally for 1 hour. Most revisits use the local cache with zero network calls.</p>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="privacy-heading">What We Collect</h3>
+        <ul class="privacy-list">
+          <li>Domain name, page title, and meta description (when API is called)</li>
+          <li>Extracted threat signal counts (not raw page text, in most cases)</li>
+          <li>Full page text only when local analysis detects threats and no cached result exists</li>
+        </ul>
+
+        <h3 class="privacy-heading">What We Never Collect</h3>
+        <ul class="privacy-list never-list">
+          <li>Browsing history or page visit timestamps</li>
+          <li>Personal information, names, emails, or accounts</li>
+          <li>Form data, passwords, or credentials</li>
+          <li>Cookies, tokens, or session data</li>
+          <li>IP addresses (not logged by our servers)</li>
+        </ul>
+
+        <div class="privacy-links">
+          <a href="https://scamwarning.ai/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>
+          <a href="https://github.com/mcpcio/scamwarning" target="_blank" rel="noopener">Source Code (GitHub)</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h2 class="section-title">About</h2>
+      <div class="option-card">
+        <p class="about-text">ScamWarning v1.0.0</p>
+        <p class="about-text">A free, open-source scam detection extension by <a href="https://mcpcio.com" target="_blank" rel="noopener">MCPCIO</a>.</p>
+        <p class="about-text muted">No premium tier. No upsells. No ads. Ever.</p>
+      </div>
+    </section>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
