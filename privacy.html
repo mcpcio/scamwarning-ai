@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScamWarning Privacy Policy — MCPCIO</title>
+    <meta name="description" content="Privacy policy for the ScamWarning Chrome extension by MCPCIO. Learn what data is collected, how it's used, and your rights.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://mcpcio.com/shared/css/mcpcio-core.css?v=2.4.2">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://mcpcio.com/media/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://mcpcio.com/media/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://mcpcio.com/media/apple-touch-icon.png">
+    <style>
+        .privacy-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+        .privacy-container h1 {
+            font-size: 2rem;
+            color: #f59e0b;
+            margin-bottom: 8px;
+        }
+        .privacy-container .last-updated {
+            color: #888;
+            font-size: 0.875rem;
+            margin-bottom: 40px;
+        }
+        .privacy-container h2 {
+            font-size: 1.25rem;
+            color: #e5e5e5;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #333;
+        }
+        .privacy-container p,
+        .privacy-container li {
+            color: #ccc;
+            line-height: 1.8;
+            font-size: 0.9375rem;
+        }
+        .privacy-container ul {
+            padding-left: 20px;
+            margin: 12px 0;
+        }
+        .privacy-container li {
+            margin-bottom: 8px;
+        }
+        .privacy-container .highlight-box {
+            background: #1a1a2a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .privacy-container .highlight-box p {
+            margin: 0;
+        }
+        .privacy-container .compliance-statement {
+            background: #0a2a0a;
+            border: 1px solid #22c55e33;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 24px 0;
+        }
+        .privacy-container .compliance-statement p {
+            color: #22c55e;
+            font-weight: 500;
+        }
+        .privacy-container a {
+            color: #f59e0b;
+            text-decoration: none;
+        }
+        .privacy-container a:hover {
+            text-decoration: underline;
+        }
+        .privacy-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        .privacy-container th,
+        .privacy-container td {
+            padding: 10px 14px;
+            border: 1px solid #333;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+        .privacy-container th {
+            background: #2a2a2a;
+            color: #e5e5e5;
+            font-weight: 600;
+        }
+        .privacy-container td {
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <header class="mcpcio-header">
+        <div class="mcpcio-header-container">
+            <a href="https://mcpcio.com" class="mcpcio-logo">
+                <img src="https://mcpcio.com/media/mcpciologo.png" alt="MCPCIO">
+                <span class="mcpcio-vertical-name">ScamWarning</span>
+            </a>
+            <button class="mcpcio-mobile-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+            <nav class="mcpcio-nav" id="headerNav">
+                <a href="https://mcpcio.com" class="mcpcio-nav-item">Home</a>
+                <a href="https://mcpcio.com/tools/" class="mcpcio-nav-item">Free Tools</a>
+                <a href="https://mcpcio.com/privacy-promise.html" class="mcpcio-nav-item">Privacy Promise</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="privacy-container">
+        <h1>ScamWarning Privacy Policy</h1>
+        <p class="last-updated">Last updated: April 25, 2026</p>
+
+        <p>ScamWarning is a free, open-source Chrome extension by MCPCIO (EffinSoftware.com, Inc.). This policy explains exactly what data ScamWarning collects, how it is used, and what it does not collect.</p>
+
+        <div class="highlight-box">
+            <p><strong>The short version:</strong> ScamWarning analyzes web pages for scam indicators. Most analysis happens locally in your browser. When our API is used, only the minimum data needed for threat assessment is transmitted. We never collect personal information, browsing history, or tracking data. The extension is <a href="https://github.com/mcpcio/scamwarning" target="_blank" rel="noopener">fully open source</a> for verification.</p>
+        </div>
+
+        <h2>1. What Data We Collect</h2>
+        <p>When ScamWarning sends data to our assessment API, the following information may be transmitted:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>When Sent</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Domain name (e.g., "example.com")</td>
+                    <td>When API assessment is triggered</td>
+                    <td>Look up cached threat assessment</td>
+                </tr>
+                <tr>
+                    <td>Page title and meta description</td>
+                    <td>When API assessment is triggered</td>
+                    <td>Context for threat analysis</td>
+                </tr>
+                <tr>
+                    <td>Extracted threat signal counts</td>
+                    <td>When API assessment is triggered</td>
+                    <td>Structured indicators (not raw text)</td>
+                </tr>
+                <tr>
+                    <td>Page content (first 2,000 characters)</td>
+                    <td>Only when local analysis detects threats AND no cached result exists</td>
+                    <td>AI-powered threat assessment for novel pages</td>
+                </tr>
+                <tr>
+                    <td>Anonymous install ID</td>
+                    <td>With every API request</td>
+                    <td>Rate limiting only (not linked to identity)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>2. What We Do NOT Collect</h2>
+        <ul>
+            <li><strong>Browsing history</strong> — We do not record, store, or transmit which pages you visit or when</li>
+            <li><strong>Personal information</strong> — No names, email addresses, phone numbers, or account information</li>
+            <li><strong>Credentials</strong> — No passwords, authentication tokens, cookies, or session data</li>
+            <li><strong>Form data</strong> — We never read or transmit data you enter into forms on any website</li>
+            <li><strong>IP addresses</strong> — Our servers do not log IP addresses beyond in-memory rate limiting</li>
+            <li><strong>Location data</strong> — No geographic or physical location information</li>
+            <li><strong>Financial data</strong> — No payment, banking, or credit card information</li>
+        </ul>
+
+        <h2>3. How Data Is Used</h2>
+        <p>Data transmitted to our API is used exclusively for:</p>
+        <ul>
+            <li><strong>Threat assessment</strong> — Determining if a web page contains scam, phishing, or fraud indicators</li>
+            <li><strong>Knowledge base improvement</strong> — Assessed pages contribute to our anonymous threat database, improving future assessments for all users</li>
+            <li><strong>Rate limiting</strong> — The anonymous install ID prevents abuse of our free API</li>
+        </ul>
+        <p>Data is never used for advertising, user profiling, data brokerage, credit assessment, or any purpose unrelated to scam detection.</p>
+
+        <h2>4. Local-First Architecture</h2>
+        <p>The majority of ScamWarning's analysis happens locally in your browser:</p>
+        <ul>
+            <li><strong>Local pattern matching</strong> runs on every page without any network call</li>
+            <li>Pages with no suspicious patterns are marked safe <strong>without contacting our servers</strong></li>
+            <li>Assessment results are cached locally for 1 hour — repeat visits use the cache with zero network calls</li>
+            <li>In "Click to Scan" mode (the default), no data is sent until you explicitly click the ScamWarning icon</li>
+        </ul>
+
+        <h2>5. Data Retention</h2>
+        <ul>
+            <li><strong>Local cache:</strong> 1 hour, stored in your browser via Chrome's storage API</li>
+            <li><strong>Server-side cache:</strong> 1 hour per domain assessment (Cloudflare KV)</li>
+            <li><strong>Threat database:</strong> Anonymized assessment results are stored indefinitely to improve the knowledge base. These contain no user-identifying information.</li>
+            <li><strong>Rate limit counters:</strong> Reset daily (24-hour TTL)</li>
+        </ul>
+
+        <h2>6. Third-Party Services</h2>
+        <p>ScamWarning uses the following third-party services:</p>
+        <ul>
+            <li><strong>Cloudflare Workers</strong> — Hosts our assessment API at the edge for fast response times. Subject to <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare's Privacy Policy</a>.</li>
+            <li><strong>Anthropic (Claude AI)</strong> — Provides AI-powered threat assessment for novel pages. Page content sent for assessment is not used by Anthropic for model training. Subject to <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener">Anthropic's Privacy Policy</a>.</li>
+        </ul>
+        <p>No other third-party services, analytics, telemetry, or tracking tools are used.</p>
+
+        <h2>7. User Corrections</h2>
+        <p>When you submit a correction ("This assessment is wrong"), the following is stored:</p>
+        <ul>
+            <li>The domain name</li>
+            <li>The corrected risk level</li>
+            <li>Your optional note (if provided)</li>
+        </ul>
+        <p>Corrections are anonymous — they are not linked to your install ID, identity, or browsing history.</p>
+
+        <h2>8. Your Rights</h2>
+        <ul>
+            <li><strong>Transparency:</strong> ScamWarning is <a href="https://github.com/mcpcio/scamwarning" target="_blank" rel="noopener">open source</a>. You can read every line of code to verify these claims.</li>
+            <li><strong>Control:</strong> You choose between Click-to-Scan (default, no automatic data transmission) and Always-On mode.</li>
+            <li><strong>Whitelist:</strong> Add any domain to your trusted list to skip assessment entirely.</li>
+            <li><strong>Uninstall:</strong> Removing the extension deletes all locally stored data immediately. No server-side data is linked to your identity.</li>
+        </ul>
+
+        <h2>9. Children's Privacy</h2>
+        <p>ScamWarning does not knowingly collect any personal information from anyone, including children under 13. The extension does not require an account, login, or any personal information to use.</p>
+
+        <h2>10. Changes to This Policy</h2>
+        <p>We will update this page if our practices change. The "Last updated" date at the top reflects the most recent revision. Material changes will be noted in the extension's changelog.</p>
+
+        <div class="compliance-statement">
+            <p>ScamWarning's use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developer.chrome.com/docs/webstore/program-policies/limited-use/" target="_blank" rel="noopener" style="color: #22c55e;">Chrome Web Store User Data Policy</a>, including the Limited Use requirements.</p>
+        </div>
+
+        <h2>11. Contact</h2>
+        <p>For questions about this privacy policy or ScamWarning:</p>
+        <p>
+            EffinSoftware.com, Inc. (MCPCIO)<br>
+            2232 Dell Range Blvd, Suite 245-3069<br>
+            Cheyenne, WY 82801<br>
+            <a href="mailto:robert@mcpcio.com">robert@mcpcio.com</a>
+        </p>
+    </main>
+
+    <footer class="mcpcio-footer">
+        <div class="mcpcio-footer-content">
+            <div class="mcpcio-footer-columns">
+                <div class="mcpcio-footer-section">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="https://mcpcio.com/about.html">About MCPCIO</a></li>
+                        <li><a href="https://mcpcio.com/pricing.html">Pricing</a></li>
+                        <li><a href="https://dashboard.mcpcio.com">Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="mcpcio-footer-section">
+                    <h4>AI Tools</h4>
+                    <ul>
+                        <li><a href="https://mcpcio.com/tools/">All AI Tools</a></li>
+                        <li><a href="https://mcpcio.com/api-docs.html">Documentation &amp; Integration</a></li>
+                        <li><a href="https://mcpcio.com/privacy-promise.html" style="color: var(--gold-secondary);"><i class="fa-solid fa-user-secret" style="color: var(--gold-secondary);"></i> Privacy Promise</a></li>
+                    </ul>
+                </div>
+                <div class="mcpcio-footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="https://mcpcio.com/privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="https://mcpcio.com/terms-of-service.html">Terms of Service</a></li>
+                        <li><a href="https://mcpcio.com/contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="mcpcio-footer-section">
+                    <h4>Contact</h4>
+                    <address>
+                        2232 Dell Range Blvd<br>Suite 245-3069<br>Cheyenne, WY 82801<br>
+                        <a href="mailto:robert@mcpcio.com">robert@mcpcio.com</a>
+                    </address>
+                </div>
+            </div>
+            <div class="mcpcio-footer-bottom">
+                <p>&copy; 2026 MCPCIO. All rights reserved.</p>
+                <p class="mcpcio-footer-version">ScamWarning v1.0.0</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://mcpcio.com/shared/js/mcpcio-core.js"></script>
+    <script>MCPCIO.init();</script>
+</body>
+</html>
