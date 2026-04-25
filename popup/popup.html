@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="popup.css">
+  <title>ScamWarning</title>
+</head>
+<body>
+  <div class="popup-container">
+    <header class="popup-header">
+      <img src="../assets/icons/icon-default-32.png" alt="ScamWarning" class="header-icon">
+      <span class="header-title">ScamWarning</span>
+    </header>
+
+    <div id="loading-state" class="state-panel">
+      <div class="spinner"></div>
+      <p>Analyzing page...</p>
+    </div>
+
+    <div id="scan-prompt" class="state-panel hidden">
+      <p class="scan-prompt-text">Click to scan this page</p>
+      <button id="scan-btn" class="btn btn-primary">Scan Now</button>
+      <p class="scan-hint">Enable always-on mode in <a href="#" id="open-options-link">Settings</a></p>
+    </div>
+
+    <div id="assessment-panel" class="hidden">
+      <div class="score-section">
+        <div class="score-circle" id="score-circle">
+          <span class="score-number" id="score-number">0</span>
+        </div>
+        <div class="score-info">
+          <span class="risk-badge" id="risk-badge">Safe</span>
+          <span class="domain-text" id="domain-text">example.com</span>
+        </div>
+      </div>
+
+      <p class="summary-text" id="summary-text"></p>
+
+      <div class="flags-section" id="flags-section">
+        <h3 class="flags-title">Detected Flags</h3>
+        <ul class="flags-list" id="flags-list"></ul>
+      </div>
+
+      <div class="correction-section">
+        <p class="correction-prompt">Is this assessment correct?</p>
+        <div class="correction-buttons">
+          <button id="confirm-btn" class="btn btn-small btn-confirm" title="Confirm assessment">
+            <span class="thumb">&#x1F44D;</span> Yes
+          </button>
+          <button id="correct-btn" class="btn btn-small btn-correct" title="Submit correction">
+            <span class="thumb">&#x1F44E;</span> No
+          </button>
+        </div>
+
+        <div id="correction-form" class="hidden">
+          <label class="form-label">What should the risk level be?</label>
+          <select id="corrected-level" class="form-select">
+            <option value="safe">Safe — No threats</option>
+            <option value="moderate">Moderate — Some concerns</option>
+            <option value="threat">Threat — Significant risk</option>
+          </select>
+          <label class="form-label">Optional note</label>
+          <input type="text" id="correction-note" class="form-input" placeholder="Why is this wrong?" maxlength="500">
+          <button id="submit-correction" class="btn btn-primary btn-small">Submit Correction</button>
+          <p id="correction-status" class="correction-status hidden"></p>
+        </div>
+      </div>
+    </div>
+
+    <div id="error-panel" class="state-panel hidden">
+      <p class="error-text" id="error-text">Unable to assess this page.</p>
+    </div>
+
+    <footer class="popup-footer">
+      <a href="https://mcpcio.com" target="_blank" rel="noopener" class="footer-link">Powered by MCPCIO</a>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
