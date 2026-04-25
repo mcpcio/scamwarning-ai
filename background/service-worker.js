@@ -11,7 +11,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     await chrome.storage.local.set({
       installId: installId,
       settings: {
-        alwaysOn: false,
+        alwaysOn: true,
         showBadge: true,
         showOnSafe: true
       },
@@ -99,17 +99,6 @@ async function handlePageSignals(signals, tab) {
 
   const { settings = {} } = await chrome.storage.local.get('settings');
   const hasAlwaysOn = await checkAlwaysOnPermission();
-
-  if (!settings.alwaysOn && !hasAlwaysOn) {
-    await setIconState(tab.id, 'moderate', {
-      risk_level: 'moderate',
-      summary: 'Suspicious patterns detected. Click to scan.',
-      flags: buildLocalFlags(signals),
-      source: 'local_pending',
-      signals: signals
-    });
-    return {};
-  }
 
   return await performApiAssessment(signals, tab.id);
 }
