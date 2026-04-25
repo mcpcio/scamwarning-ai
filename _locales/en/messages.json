@@ -1,0 +1,10 @@
+{
+  "extensionName": {
+    "message": "ScamWarning by MCPCIO",
+    "description": "Extension display name in Chrome Web Store and toolbar"
+  },
+  "extensionDescription": {
+    "message": "AI-powered scam detection for every page you visit. Free. Private. Open source.",
+    "description": "Extension description shown in Chrome Web Store"
+  }
+}
