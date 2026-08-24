@@ -13,9 +13,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Metrics-matched fallback so text doesn't reflow ("shimmy") when Inter swaps in.
+           Overrides are Inter-over-Arial values; keeps the fallback the exact size of Inter. */
+        @font-face {
+            font-family: 'Inter Fallback';
+            src: local('Arial');
+            ascent-override: 90.44%;
+            descent-override: 22.52%;
+            line-gap-override: 0.00%;
+            size-adjust: 107.12%;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', 'Inter Fallback', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #0a0a0a;
             color: #e5e5e5;
             line-height: 1.6;

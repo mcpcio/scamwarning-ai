@@ -14,6 +14,19 @@
     <link rel="icon" type="image/png" sizes="16x16" href="https://mcpcio.com/media/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="https://mcpcio.com/media/apple-touch-icon.png">
     <style>
+        /* Metrics-matched fallback so text doesn't reflow ("shimmy") when Inter swaps in.
+           Overrides are Inter-over-Arial values; keeps the fallback the exact size of Inter. */
+        @font-face {
+            font-family: 'Inter Fallback';
+            src: local('Arial');
+            ascent-override: 90.44%;
+            descent-override: 22.52%;
+            line-gap-override: 0.00%;
+            size-adjust: 107.12%;
+        }
+        body {
+            font-family: 'Inter', 'Inter Fallback', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
         .privacy-container {
             max-width: 800px;
             margin: 0 auto;
