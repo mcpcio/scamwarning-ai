@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ScamWarning Privacy Policy — MCPCIO</title>
-    <meta name="description" content="Privacy policy for the ScamWarning Chrome extension by MCPCIO. Learn what data is collected, how it's used, and your rights.">
+    <title>ScamWarning Privacy Policy</title>
+    <meta name="description" content="Privacy policy for the ScamWarning Chrome extension. Learn what data is collected, how it's used, and your rights.">
+    <meta property="og:title" content="ScamWarning Privacy Policy">
+    <meta property="og:description" content="What data ScamWarning collects, how it's used, and what it never collects.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://scamwarning.ai/privacy.html">
+    <link rel="icon" type="image/png" href="assets/icons/icon-default-48.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="https://mcpcio.com/shared/css/mcpcio-core.css?v=2.4.2">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://mcpcio.com/media/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://mcpcio.com/media/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://mcpcio.com/media/apple-touch-icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* Metrics-matched fallback so text doesn't reflow ("shimmy") when Inter swaps in.
            Overrides are Inter-over-Arial values; keeps the fallback the exact size of Inter. */
@@ -24,9 +24,33 @@
             line-gap-override: 0.00%;
             size-adjust: 107.12%;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', 'Inter Fallback', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #e5e5e5;
+            line-height: 1.6;
+            min-height: 100vh;
         }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+        /* Header (matches home page) */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid #1a1a1a;
+        }
+        .header-inner {
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #e5e5e5; }
+        .logo-icon { width: 32px; height: 32px; }
+        .logo-text { font-size: 18px; font-weight: 700; }
+        .logo-text span { color: #f59e0b; }
+        .header-links { display: flex; gap: 24px; }
+        .header-links a { color: #888; text-decoration: none; font-size: 14px; }
+        .header-links a:hover { color: #f59e0b; }
+
+        /* Privacy content */
         .privacy-container {
             max-width: 800px;
             margin: 0 auto;
@@ -111,23 +135,28 @@
         .privacy-container td {
             color: #ccc;
         }
+
+        /* Footer (matches home page) */
+        footer {
+            padding: 40px 0; border-top: 1px solid #1a1a1a;
+            text-align: center;
+        }
+        footer p { font-size: 13px; color: #666; }
+        footer a { color: #f59e0b; text-decoration: none; }
     </style>
 </head>
 <body>
-    <header class="mcpcio-header">
-        <div class="mcpcio-header-container">
-            <a href="https://mcpcio.com" class="mcpcio-logo">
-                <img src="https://mcpcio.com/media/mcpciologo.png" alt="MCPCIO">
-                <span class="mcpcio-vertical-name">ScamWarning</span>
+    <header>
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <img src="assets/icons/icon-default-48.png" alt="ScamWarning" class="logo-icon">
+                <span class="logo-text">Scam<span>Warning</span></span>
             </a>
-            <button class="mcpcio-mobile-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-                <span></span><span></span><span></span>
-            </button>
-            <nav class="mcpcio-nav" id="headerNav">
-                <a href="https://mcpcio.com" class="mcpcio-nav-item">Home</a>
-                <a href="https://mcpcio.com/tools/" class="mcpcio-nav-item">Free Tools</a>
-                <a href="https://mcpcio.com/privacy-promise.html" class="mcpcio-nav-item">Privacy Promise</a>
-            </nav>
+            <div class="header-links">
+                <a href="https://github.com/mcpcio/scamwarning-ai">GitHub</a>
+                <a href="/privacy">Privacy</a>
+                <a href="https://mcpcio.com">MCPCIO</a>
+            </div>
         </div>
     </header>
 
@@ -138,7 +167,7 @@
         <p>ScamWarning is a free, open-source Chrome extension by MCPCIO (EffinSoftware.com, Inc.). This policy explains exactly what data ScamWarning collects, how it is used, and what it does not collect.</p>
 
         <div class="highlight-box">
-            <p><strong>The short version:</strong> ScamWarning analyzes web pages for scam indicators. Most analysis happens locally in your browser. When our API is used, only the minimum data needed for threat assessment is transmitted. We never collect personal information, browsing history, or tracking data. The extension is <a href="https://github.com/mcpcio/scamwarning" target="_blank" rel="noopener">fully open source</a> for verification.</p>
+            <p><strong>The short version:</strong> ScamWarning analyzes web pages for scam indicators. Most analysis happens locally in your browser. When our API is used, only the minimum data needed for threat assessment is transmitted. We never collect personal information, browsing history, or tracking data. The extension is <a href="https://github.com/mcpcio/scamwarning-ai" target="_blank" rel="noopener">fully open source</a> for verification.</p>
         </div>
 
         <h2>1. What Data We Collect</h2>
@@ -236,7 +265,7 @@
 
         <h2>8. Your Rights</h2>
         <ul>
-            <li><strong>Transparency:</strong> ScamWarning is <a href="https://github.com/mcpcio/scamwarning" target="_blank" rel="noopener">open source</a>. You can read every line of code to verify these claims.</li>
+            <li><strong>Transparency:</strong> ScamWarning is <a href="https://github.com/mcpcio/scamwarning-ai" target="_blank" rel="noopener">open source</a>. You can read every line of code to verify these claims.</li>
             <li><strong>Control:</strong> You choose between Click-to-Scan (default, no automatic data transmission) and Always-On mode.</li>
             <li><strong>Whitelist:</strong> Add any domain to your trusted list to skip assessment entirely.</li>
             <li><strong>Uninstall:</strong> Removing the extension deletes all locally stored data immediately. No server-side data is linked to your identity.</li>
@@ -262,49 +291,11 @@
         </p>
     </main>
 
-    <footer class="mcpcio-footer">
-        <div class="mcpcio-footer-content">
-            <div class="mcpcio-footer-columns">
-                <div class="mcpcio-footer-section">
-                    <h4>Platform</h4>
-                    <ul>
-                        <li><a href="https://mcpcio.com/about.html">About MCPCIO</a></li>
-                        <li><a href="https://mcpcio.com/pricing.html">Pricing</a></li>
-                        <li><a href="https://dashboard.mcpcio.com">Dashboard</a></li>
-                    </ul>
-                </div>
-                <div class="mcpcio-footer-section">
-                    <h4>AI Tools</h4>
-                    <ul>
-                        <li><a href="https://mcpcio.com/tools/">All AI Tools</a></li>
-                        <li><a href="https://mcpcio.com/api-docs.html">Documentation &amp; Integration</a></li>
-                        <li><a href="https://mcpcio.com/privacy-promise.html" style="color: var(--gold-secondary);"><i class="fa-solid fa-user-secret" style="color: var(--gold-secondary);"></i> Privacy Promise</a></li>
-                    </ul>
-                </div>
-                <div class="mcpcio-footer-section">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="https://mcpcio.com/privacy-policy.html">Privacy Policy</a></li>
-                        <li><a href="https://mcpcio.com/terms-of-service.html">Terms of Service</a></li>
-                        <li><a href="https://mcpcio.com/contact.html">Contact Us</a></li>
-                    </ul>
-                </div>
-                <div class="mcpcio-footer-section">
-                    <h4>Contact</h4>
-                    <address>
-                        2232 Dell Range Blvd<br>Suite 245-3069<br>Cheyenne, WY 82801<br>
-                        <a href="mailto:robert@mcpcio.com">robert@mcpcio.com</a>
-                    </address>
-                </div>
-            </div>
-            <div class="mcpcio-footer-bottom">
-                <p>&copy; 2026 MCPCIO. All rights reserved.</p>
-                <p class="mcpcio-footer-version">ScamWarning v1.0.0</p>
-            </div>
+    <footer>
+        <div class="container">
+            <p>ScamWarning is a free, open-source project by <a href="https://mcpcio.com">MCPCIO</a>.</p>
+            <p style="margin-top: 8px;"><a href="/">Home</a> &middot; <a href="/privacy">Privacy Policy</a> &middot; <a href="https://github.com/mcpcio/scamwarning-ai">GitHub</a></p>
         </div>
     </footer>
-
-    <script src="https://mcpcio.com/shared/js/mcpcio-core.js"></script>
-    <script>MCPCIO.init();</script>
 </body>
 </html>
