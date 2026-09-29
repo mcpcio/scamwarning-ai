@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Check a Scam — ScamWarning</title>
+<meta name="description" content="Paste a suspicious link or message, or upload a screenshot, and ScamWarning tells you if it looks like a scam. Free. No sign-up.">
+<style>
+  :root{
+    --bg:#1a1a1a; --card:#232323; --line:#333; --text:#e5e5e5; --muted:#a3a3a3;
+    --accent:#f59e0b; --safe:#22c55e; --moderate:#f59e0b; --threat:#ef4444; --unknown:#9ca3af;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:19px;line-height:1.5;-webkit-text-size-adjust:100%}
+  .wrap{max-width:640px;margin:0 auto;padding:20px 18px 60px}
+  header{text-align:center;padding:18px 0 8px}
+  .logo{font-size:26px;font-weight:800;letter-spacing:.3px}
+  .logo .shield{color:var(--accent)}
+  .tag{color:var(--muted);font-size:17px;margin-top:6px}
+  h1{font-size:23px;margin:26px 0 6px}
+  .sub{color:var(--muted);font-size:17px;margin:0 0 14px}
+  textarea{width:100%;min-height:130px;background:var(--card);color:var(--text);
+    border:2px solid var(--line);border-radius:14px;padding:14px;font-size:19px;resize:vertical}
+  textarea:focus{outline:none;border-color:var(--accent)}
+  .row{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+  .btn{flex:1 1 auto;min-height:60px;border:none;border-radius:14px;font-size:20px;font-weight:700;
+    cursor:pointer;padding:0 18px}
+  .btn-primary{background:var(--accent);color:#1a1a1a}
+  .btn-primary:active{filter:brightness(.92)}
+  .btn-photo{background:var(--card);color:var(--text);border:2px solid var(--line)}
+  .btn:disabled{opacity:.6;cursor:default}
+  #file{display:none}
+  .photo-name{color:var(--muted);font-size:15px;margin-top:8px;min-height:20px;word-break:break-all}
+  .hint{color:var(--muted);font-size:15px;margin-top:16px;text-align:center}
+  /* result */
+  #result{margin-top:24px}
+  .card{background:var(--card);border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+  .banner{padding:20px 18px;display:flex;align-items:center;gap:14px;color:#111;font-weight:800}
+  .banner .emoji{font-size:34px;line-height:1}
+  .banner .level{font-size:24px}
+  .banner.safe{background:var(--safe)} .banner.moderate{background:var(--moderate)}
+  .banner.threat{background:var(--threat);color:#fff} .banner.unknown{background:var(--unknown);color:#111}
+  .body{padding:18px}
+  .summary{font-size:19px;margin:0 0 14px}
+  .reasons-title,.dowhat-title{font-size:15px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:14px 0 6px}
+  ul.reasons{margin:0;padding-left:22px}
+  ul.reasons li{margin:6px 0}
+  .dowhat{background:#1a1a1a;border-radius:12px;padding:14px;font-size:18px}
+  .link-note{margin-top:14px;font-size:16px;color:var(--muted);word-break:break-all}
+  .link-note b{color:var(--text)}
+  .spinner{width:40px;height:40px;border:4px solid var(--line);border-top-color:var(--accent);
+    border-radius:50%;animation:spin 1s linear infinite;margin:30px auto}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .center{text-align:center;color:var(--muted)}
+  footer{margin-top:36px;text-align:center;color:var(--muted);font-size:14px;line-height:1.6}
+  footer a{color:var(--accent)}
+  .disclaimer{margin-top:10px;font-size:13px}
+  @media (max-width:480px){ body{font-size:18px} .btn{flex-basis:100%} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo"><span class="shield">🛡</span> ScamWarning</div>
+    <div class="tag">Free scam check · no sign-up · nothing saved about you</div>
+  </header>
+
+  <h1>Is this a scam?</h1>
+  <p class="sub">Paste a link or a message you received, or upload a screenshot of it. We'll tell you if it looks like a scam and why.</p>
+
+  <textarea id="input" aria-label="Paste a link or message" placeholder="Paste the link or the text message / email here…"></textarea>
+
+  <div class="row">
+    <button class="btn btn-primary" id="checkBtn">Check it</button>
+    <button class="btn btn-photo" id="photoBtn" type="button">📷 Upload a screenshot</button>
+    <input type="file" id="file" accept="image/*" capture="environment">
+  </div>
+  <div class="photo-name" id="photoName" aria-live="polite"></div>
+
+  <div id="result" aria-live="polite"></div>
+
+  <p class="hint">Tip: if a message asks for a code, a password, gift cards, or money — be very careful.</p>
+
+  <footer>
+    Built by <a href="https://mcpcio.com" target="_blank" rel="noopener">MCPCIO</a> ·
+    <a href="https://scamwarning.ai/privacy.html" target="_blank" rel="noopener">Privacy</a><br>
+    We don't keep your messages or photos, and we don't track you.
+    <div class="disclaimer">This is a helpful guide, not a guarantee. When unsure, contact the company using a number you look up yourself — never one from the message.</div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var API = "https://api.scamwarning.ai/check";
+  var input = document.getElementById("input");
+  var file = document.getElementById("file");
+  var photoBtn = document.getElementById("photoBtn");
+  var photoName = document.getElementById("photoName");
+  var checkBtn = document.getElementById("checkBtn");
+  var result = document.getElementById("result");
+  var pendingImage = null; // {base64, media_type}
+
+  var LEVELS = {
+    safe:     {emoji:"✅", label:"Looks safe",       cls:"safe",
+               dowhat:"No strong scam signs. Even so, never share passwords or one-time codes if something feels off."},
+    moderate: {emoji:"⚠️", label:"Be careful",       cls:"moderate",
+               dowhat:"Some warning signs. Don't share personal info, codes, or money until you're sure. When in doubt, contact the company using a number you look up yourself."},
+    threat:   {emoji:"🚫", label:"Likely a scam",    cls:"threat",
+               dowhat:"Strong scam signs. Do not click links, reply, call any number in it, or send money or codes. Delete it. If it claimed to be your bank, call the number on your card."},
+    unknown:  {emoji:"❔", label:"Couldn't verify",  cls:"unknown",
+               dowhat:"We couldn't check this one. Treat it as suspicious if it was unexpected or asks for money, codes, or personal details."}
+  };
+
+  photoBtn.addEventListener("click", function(){ file.click(); });
+
+  file.addEventListener("change", function(){
+    var f = file.files && file.files[0];
+    if(!f){ pendingImage=null; photoName.textContent=""; return; }
+    photoName.textContent = "Reading photo…";
+    downscaleToBase64(f, function(b64, mt){
+      if(!b64){ photoName.textContent="Couldn't read that image — try another photo."; pendingImage=null; return; }
+      pendingImage = {base64:b64, media_type:mt};
+      photoName.textContent = "📷 " + f.name + " ready — tap “Check it”.";
+    });
+  });
+
+  checkBtn.addEventListener("click", runCheck);
+  input.addEventListener("keydown", function(e){ if((e.metaKey||e.ctrlKey) && e.key==="Enter") runCheck(); });
+
+  function runCheck(){
+    var text = (input.value||"").trim();
+    if(!pendingImage && !text){ result.innerHTML='<p class="center">Paste a link or message, or upload a screenshot, first.</p>'; return; }
+    setLoading(true);
+    var payload;
+    if(pendingImage){ payload = {type:"image", content:[pendingImage]}; }
+    else if(/^https?:\/\/\S+$/i.test(text)){ payload = {type:"url", content:text}; }
+    else { payload = {type:"message", content:text}; } // backend also auto-detects
+    fetch(API, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload)})
+      .then(function(r){
+        if(r.status===429){ throw {handled:"Too many checks right now. Please wait a little and try again."}; }
+        if(!r.ok){ throw {handled:"Something went wrong checking that. Please try again in a moment."}; }
+        return r.json();
+      })
+      .then(function(d){ setLoading(false); render(d); })
+      .catch(function(err){ setLoading(false);
+        result.innerHTML = '<div class="card"><div class="body"><p class="summary">'+
+          escapeHtml((err&&err.handled) || "Couldn't reach the checker. Check your connection and try again.")+
+          '</p></div></div>'; });
+  }
+
+  function render(d){
+    var lvlKey = (d && d.risk_level) || "unknown";
+    if(!LEVELS[lvlKey]) lvlKey = "unknown";
+    var L = LEVELS[lvlKey];
+    var flags = (d.flags||[]).filter(Boolean);
+    var html = '<div class="card">';
+    html += '<div class="banner '+L.cls+'"><span class="emoji">'+L.emoji+'</span><span class="level">'+L.label+'</span></div>';
+    html += '<div class="body">';
+    if(d.summary){ html += '<p class="summary">'+escapeHtml(d.summary)+'</p>'; }
+    if(flags.length){
+      html += '<div class="reasons-title">Why</div><ul class="reasons">';
+      flags.forEach(function(f){ html += '<li>'+escapeHtml(f)+'</li>'; });
+      html += '</ul>';
+    }
+    // Where a link really goes (redirect expansion) — a key senior-safety cue.
+    if(d.final_url){
+      var chain = (d.redirect_chain||[]);
+      if(chain.length>1){ html += '<p class="link-note">This link quietly redirects and actually goes to:<br><b>'+escapeHtml(d.final_url)+'</b></p>'; }
+    }
+    if(d.checked_links && d.checked_links.length){
+      html += '<p class="link-note">Links found in the message:<br>';
+      d.checked_links.forEach(function(l){ html += '• '+escapeHtml(l.url)+' — <b>'+escapeHtml(l.risk_level||"")+'</b><br>'; });
+      html += '</p>';
+    }
+    html += '<div class="dowhat-title">What to do</div><div class="dowhat">'+escapeHtml(L.dowhat)+'</div>';
+    html += '</div></div>';
+    result.innerHTML = html;
+    result.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function setLoading(on){
+    checkBtn.disabled = on; photoBtn.disabled = on;
+    checkBtn.textContent = on ? "Checking…" : "Check it";
+    if(on) result.innerHTML = '<div class="spinner" role="status" aria-label="Checking"></div><p class="center">Checking…</p>';
+  }
+
+  // Downscale big phone photos (often 3-8MB) to keep the upload small and OCR clean.
+  function downscaleToBase64(fileObj, cb){
+    var reader = new FileReader();
+    reader.onload = function(){
+      var img = new Image();
+      img.onload = function(){
+        try{
+          var max = 1600, w = img.width, h = img.height;
+          if(w>max || h>max){ var s = Math.min(max/w, max/h); w=Math.round(w*s); h=Math.round(h*s); }
+          var c = document.createElement("canvas"); c.width=w; c.height=h;
+          c.getContext("2d").drawImage(img,0,0,w,h);
+          var dataUrl = c.toDataURL("image/jpeg", 0.85);
+          cb(dataUrl.split(",")[1], "image/jpeg");
+        }catch(e){
+          // Fallback: send original bytes as-is.
+          var s = reader.result || ""; var parts = s.split(","); var mt=(s.match(/data:(.*?);/)||[])[1]||"image/jpeg";
+          cb(parts[1]||null, mt);
+        }
+      };
+      img.onerror = function(){ cb(null); };
+      img.src = reader.result;
+    };
+    reader.onerror = function(){ cb(null); };
+    reader.readAsDataURL(fileObj);
+  }
+
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+})();
+</script>
+</body>
+</html>
