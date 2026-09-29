@@ -50,6 +50,21 @@
   .dowhat{background:#1a1a1a;border-radius:12px;padding:14px;font-size:18px}
   .link-note{margin-top:14px;font-size:16px;color:var(--muted);word-break:break-all}
   .link-note b{color:var(--text)}
+  /* community reports */
+  .community{margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
+  .comm-note{font-size:16px;border-radius:10px;padding:10px 12px;margin-bottom:10px}
+  .comm-note.reported{background:#f59e0b1a;color:var(--moderate)}
+  .comm-note.high{background:#ef44441a;color:var(--threat)}
+  .comm-counts{font-size:16px;color:var(--muted);margin-bottom:12px}
+  .comm-counts b{color:var(--text)}
+  .comm-help{font-size:15px;color:var(--muted);margin-bottom:8px}
+  .report-row{display:flex;gap:10px;flex-wrap:wrap}
+  .btn-report{flex:1 1 auto;min-height:52px;border-radius:12px;border:2px solid var(--line);
+    background:#1a1a1a;color:var(--text);font-size:17px;font-weight:600;cursor:pointer;padding:0 14px}
+  .btn-report.scam:active{border-color:var(--threat)}
+  .btn-report.legit:active{border-color:var(--safe)}
+  .btn-report:disabled{opacity:.6}
+  .report-thanks{font-size:16px;color:var(--safe);margin-top:10px;min-height:20px}
   .spinner{width:40px;height:40px;border:4px solid var(--line);border-top-color:var(--accent);
     border-radius:50%;animation:spin 1s linear infinite;margin:30px auto}
   @keyframes spin{to{transform:rotate(360deg)}}
@@ -101,6 +116,7 @@
   var checkBtn = document.getElementById("checkBtn");
   var result = document.getElementById("result");
   var pendingImage = null; // {base64, media_type}
+  var lastEntity = null;   // {type:'domain'|'phone', value} for community reporting
 
   var LEVELS = {
     safe:     {emoji:"✅", label:"Looks safe",       cls:"safe",
@@ -175,9 +191,54 @@
       html += '</p>';
     }
     html += '<div class="dowhat-title">What to do</div><div class="dowhat">'+escapeHtml(L.dowhat)+'</div>';
+
+    // Community reports — for a link/message we can key on the website; shown as context only.
+    lastEntity = null;
+    var domainForReport = d.final_url || (d.checked_links && d.checked_links[0] && d.checked_links[0].url);
+    if(domainForReport){ lastEntity = {type:"domain", value:domainForReport}; html += communityHtml(d.community); }
+
     html += '</div></div>';
     result.innerHTML = html;
+
+    var sb = result.querySelector(".btn-report.scam");
+    var lb = result.querySelector(".btn-report.legit");
+    if(sb) sb.addEventListener("click", function(){ reportEntity("scam"); });
+    if(lb) lb.addEventListener("click", function(){ reportEntity("recognize"); });
+
     result.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function communityHtml(c){
+    c = c || {scam:0, recognize:0, level:"none"};
+    var h = '<div class="community">';
+    if(c.level==="high"){ h += '<div class="comm-note high">⚠️ Many people have reported this as a scam.</div>'; }
+    else if(c.level==="reported"){ h += '<div class="comm-note reported">Some people have reported this.</div>'; }
+    h += '<div class="comm-counts">🚩 <b>'+(c.scam||0)+'</b> reported as a scam · ✅ <b>'+(c.recognize||0)+'</b> recognize it</div>';
+    h += '<div class="comm-help">Seen this yourself? Help others:</div>';
+    h += '<div class="report-row">'+
+         '<button type="button" class="btn-report scam">🚩 Report as a scam</button>'+
+         '<button type="button" class="btn-report legit">✅ I recognize this</button>'+
+         '</div><div class="report-thanks" aria-live="polite"></div>';
+    h += '</div>';
+    return h;
+  }
+
+  function reportEntity(kind){
+    if(!lastEntity) return;
+    var thanks = result.querySelector(".report-thanks");
+    var btns = result.querySelectorAll(".btn-report");
+    btns.forEach(function(b){ b.disabled = true; });
+    if(thanks) thanks.textContent = "Sending…";
+    fetch(API.replace("/check","/report"), {method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({kind:kind, entity_type:lastEntity.type, entity:lastEntity.value})})
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        var c = res.community || {};
+        var counts = result.querySelector(".comm-counts");
+        if(counts) counts.innerHTML = '🚩 <b>'+(c.scam||0)+'</b> reported as a scam · ✅ <b>'+(c.recognize||0)+'</b> recognize it';
+        if(thanks) thanks.textContent = res.already ? "You already reported this — thanks!" : "Thanks — your report helps other people.";
+      })
+      .catch(function(){ if(thanks) thanks.textContent = "Couldn't send that report. Please try again."; btns.forEach(function(b){ b.disabled=false; }); });
   }
 
   function setLoading(on){
