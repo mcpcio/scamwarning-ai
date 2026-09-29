@@ -45,6 +45,7 @@
   .banner .level{font-size:24px}
   .banner.safe{background:var(--safe)} .banner.moderate{background:var(--moderate)}
   .banner.threat{background:var(--threat);color:#fff} .banner.unknown{background:var(--unknown);color:#111}
+  .banner.checked{background:#334155;color:#e5e5e5}
   .body{padding:18px}
   .summary{font-size:19px;margin:0 0 14px}
   .reasons-title,.dowhat-title{font-size:15px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:14px 0 6px}
@@ -86,9 +87,9 @@
   </header>
 
   <h1>Is this a scam?</h1>
-  <p class="sub">Paste a link or a message you received, or upload a screenshot of it. We'll tell you if it looks like a scam and why.</p>
+  <p class="sub">Paste a link, a phone number, or a message you received — or upload a screenshot of it. We'll tell you if it looks like a scam and why.</p>
 
-  <textarea id="input" aria-label="Paste a link or message" placeholder="Paste the link or the text message / email here…"></textarea>
+  <textarea id="input" aria-label="Paste a link, phone number, or message" placeholder="Paste the link, phone number, or the text message / email here…"></textarea>
 
   <div class="row">
     <button class="btn btn-primary" id="checkBtn">Check it</button>
@@ -167,8 +168,11 @@
     if(!pendingImage && !text){ result.innerHTML='<p class="center">Paste a link or message, or upload a screenshot, first.</p>'; return; }
     setLoading(true);
     var payload;
+    var digits = text.replace(/\D/g,"");
+    var looksPhone = /^[\d\s().+\-]{7,20}$/.test(text) && digits.length>=7 && digits.length<=15;
     if(pendingImage){ payload = {type:"image", content:[pendingImage]}; }
     else if(/^https?:\/\/\S+$/i.test(text)){ payload = {type:"url", content:text}; }
+    else if(looksPhone){ payload = {type:"phone", content:text}; }
     else { payload = {type:"message", content:text}; } // backend also auto-detects
     fetch(API, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload)})
       .then(function(r){
@@ -184,6 +188,7 @@
   }
 
   function render(d){
+    if(d && d.source==="phone_lookup"){ renderPhone(d); return; }
     var lvlKey = (d && d.risk_level) || "unknown";
     if(!LEVELS[lvlKey]) lvlKey = "unknown";
     var L = LEVELS[lvlKey];
@@ -222,6 +227,32 @@
     if(sb) sb.addEventListener("click", function(){ reportEntity("scam"); });
     if(lb) lb.addEventListener("click", function(){ reportEntity("recognize"); });
 
+    result.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function renderPhone(d){
+    lastEntity = d.phone ? {type:"phone", value:d.phone} : null;
+    var invalid = d.valid === false;
+    var bannerCls = invalid ? "moderate" : "checked";
+    var emoji = invalid ? "⚠️" : "☎️";
+    var label = invalid ? "Be careful" : "Number checked";
+    var html = '<div class="card">';
+    html += '<div class="banner '+bannerCls+'"><span class="emoji">'+emoji+'</span><span class="level">'+label+'</span></div>';
+    html += '<div class="body">';
+    if(d.phone){
+      var facts = '📞 <b>'+escapeHtml(d.phone)+'</b>';
+      if(d.valid){ facts += ' · valid'; if(d.line_type_label) facts += ' '+escapeHtml(d.line_type_label); if(d.carrier) facts += ' ('+escapeHtml(d.carrier)+')'; }
+      html += '<p class="link-note">'+facts+'</p>';
+    }
+    if(d.summary) html += '<p class="summary">'+escapeHtml(d.summary)+'</p>';
+    html += '<div class="dowhat-title">What to do</div><div class="dowhat">If this number claims to be a company you know, don\'t trust it just because it called or texted — reach the company using the number on your statement, card, or their official website.</div>';
+    if(d.phone) html += communityHtml(d.community);
+    html += '</div></div>';
+    result.innerHTML = html;
+    var sb = result.querySelector(".btn-report.scam");
+    var lb = result.querySelector(".btn-report.legit");
+    if(sb) sb.addEventListener("click", function(){ reportEntity("scam"); });
+    if(lb) lb.addEventListener("click", function(){ reportEntity("recognize"); });
     result.scrollIntoView({behavior:"smooth", block:"start"});
   }
 
