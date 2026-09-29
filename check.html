@@ -142,15 +142,15 @@
 
   file.addEventListener("change", function(){
     var f = file.files && file.files[0];
-    if(!f){ pendingImage=null; photoName.textContent=""; preview.style.display="none"; preview.removeAttribute("src"); return; }
-    photoName.textContent = "Reading photo…";
-    preview.style.display = "none";
+    clearPreview();
+    if(!f){ pendingImage=null; photoName.textContent=""; return; }
+    // Show the preview IMMEDIATELY straight from the file (robust — works even if the downscale
+    // step below hiccups on an unusual phone image format).
+    try { preview.src = URL.createObjectURL(f); preview.style.display = "block"; } catch(e){}
+    photoName.textContent = "📷 " + f.name + " — this is what will be checked:";
     downscaleToBase64(f, function(b64, mt){
-      if(!b64){ photoName.textContent="Couldn't read that image — try another photo."; pendingImage=null; preview.style.display="none"; return; }
+      if(!b64){ photoName.textContent="Couldn't read that image — try another photo."; pendingImage=null; return; }
       pendingImage = {base64:b64, media_type:mt};
-      photoName.textContent = "📷 " + f.name + " — this is what will be checked:";
-      preview.src = "data:" + mt + ";base64," + b64;   // the downscaled image we actually send
-      preview.style.display = "block";
     });
   });
 
@@ -163,7 +163,7 @@
     pendingImage = null;
     lastEntity = null;
     photoName.textContent = "";
-    preview.style.display = "none"; preview.removeAttribute("src");
+    clearPreview();
     result.innerHTML = "";
     checkBtn.disabled = false; photoBtn.disabled = false;
     checkBtn.textContent = "Check it";
@@ -326,6 +326,11 @@
     };
     reader.onerror = function(){ cb(null); };
     reader.readAsDataURL(fileObj);
+  }
+
+  function clearPreview(){
+    try { if(preview.src && preview.src.indexOf("blob:")===0) URL.revokeObjectURL(preview.src); } catch(e){}
+    preview.style.display = "none"; preview.removeAttribute("src");
   }
 
   function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(c){
