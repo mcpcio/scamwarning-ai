@@ -33,6 +33,9 @@
   .btn:disabled{opacity:.6;cursor:default}
   #file{display:none}
   .photo-name{color:var(--muted);font-size:15px;margin-top:8px;min-height:20px;word-break:break-all}
+  .btn-clear{width:100%;margin-top:12px;min-height:52px;background:transparent;color:var(--muted);
+    border:1px solid var(--line);border-radius:12px;font-size:17px;font-weight:600;cursor:pointer}
+  .btn-clear:active{color:var(--text);border-color:var(--accent)}
   .hint{color:var(--muted);font-size:15px;margin-top:16px;text-align:center}
   /* result */
   #result{margin-top:24px}
@@ -94,6 +97,8 @@
   </div>
   <div class="photo-name" id="photoName" aria-live="polite"></div>
 
+  <button class="btn-clear" id="clearBtn" type="button">✕ Clear and start over</button>
+
   <div id="result" aria-live="polite"></div>
 
   <p class="hint">Tip: if a message asks for a code, a password, gift cards, or money — be very careful.</p>
@@ -144,6 +149,18 @@
 
   checkBtn.addEventListener("click", runCheck);
   input.addEventListener("keydown", function(e){ if((e.metaKey||e.ctrlKey) && e.key==="Enter") runCheck(); });
+
+  document.getElementById("clearBtn").addEventListener("click", function(){
+    input.value = "";
+    file.value = "";            // clears the chosen file so the same photo can be re-picked
+    pendingImage = null;
+    lastEntity = null;
+    photoName.textContent = "";
+    result.innerHTML = "";
+    checkBtn.disabled = false; photoBtn.disabled = false;
+    checkBtn.textContent = "Check it";
+    input.focus();
+  });
 
   function runCheck(){
     var text = (input.value||"").trim();
