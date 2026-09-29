@@ -34,6 +34,8 @@
   #file{display:none}
   .photo-name{color:var(--muted);font-size:15px;margin-top:8px;min-height:20px;word-break:break-all}
   .preview{display:none;max-width:100%;max-height:300px;border-radius:12px;border:1px solid var(--line);margin-top:12px}
+  .img-warn{display:none;background:#ef44441a;color:var(--threat);border:1px solid #ef444455;border-radius:10px;padding:12px 14px;margin-top:10px;font-size:16px;line-height:1.45}
+  .img-warn b{display:block;margin-bottom:4px}
   .btn-clear{width:100%;margin-top:12px;min-height:52px;background:transparent;color:var(--muted);
     border:1px solid var(--line);border-radius:12px;font-size:17px;font-weight:600;cursor:pointer}
   .btn-clear:active{color:var(--text);border-color:var(--accent)}
@@ -99,6 +101,7 @@
   </div>
   <div class="photo-name" id="photoName" aria-live="polite"></div>
   <img id="preview" class="preview" alt="The image that will be checked">
+  <div id="imgWarn" class="img-warn" aria-live="polite"></div>
 
   <button class="btn-clear" id="clearBtn" type="button">✕ Clear and start over</button>
 
@@ -122,6 +125,8 @@
   var photoBtn = document.getElementById("photoBtn");
   var photoName = document.getElementById("photoName");
   var preview = document.getElementById("preview");
+  var imgWarn = document.getElementById("imgWarn");
+  var pendingImageAnomaly = null;   // {anomaly, reasons[]} from inspecting the ORIGINAL file bytes
   var checkBtn = document.getElementById("checkBtn");
   var result = document.getElementById("result");
   var pendingImage = null; // {base64, media_type}
@@ -148,6 +153,11 @@
     // step below hiccups on an unusual phone image format).
     try { preview.src = URL.createObjectURL(f); preview.style.display = "block"; } catch(e){}
     photoName.textContent = "📷 " + f.name + " — this is what will be checked:";
+    // Integrity check on the ORIGINAL bytes: is this purely a picture, or is something stapled to it?
+    inspectImageBytes(f, function(res){
+      pendingImageAnomaly = res;
+      if(res && res.anomaly){ showImgWarn(res.reasons); }
+    });
     downscaleToBase64(f, function(b64, mt){
       if(!b64){ photoName.textContent="Couldn't read that image — try another photo."; pendingImage=null; return; }
       pendingImage = {base64:b64, media_type:mt};
@@ -161,9 +171,11 @@
     input.value = "";
     file.value = "";            // clears the chosen file so the same photo can be re-picked
     pendingImage = null;
+    pendingImageAnomaly = null;
     lastEntity = null;
     photoName.textContent = "";
     clearPreview();
+    imgWarn.style.display = "none"; imgWarn.innerHTML = "";
     result.innerHTML = "";
     checkBtn.disabled = false; photoBtn.disabled = false;
     checkBtn.textContent = "Check it";
@@ -300,6 +312,90 @@
     checkBtn.disabled = on; photoBtn.disabled = on;
     checkBtn.textContent = on ? "Checking…" : "Check it";
     if(on) result.innerHTML = '<div class="spinner" role="status" aria-label="Checking"></div><p class="center">Checking…</p>';
+  }
+
+  function showImgWarn(reasons){
+    imgWarn.innerHTML = "<b>⚠️ Warning: this file isn't just a picture.</b>" +
+      reasons.map(function(r){ return escapeHtml(r); }).join("<br>") +
+      "<br><br>Extra data hidden inside an image is unusual and can be a sign of a malicious file. Don't open or forward the <i>original</i> file, and be cautious about wherever it came from.";
+    imgWarn.style.display = "block";
+  }
+
+  function formatBytes(n){ return n>1048576 ? (n/1048576).toFixed(1)+" MB" : n>1024 ? Math.round(n/1024)+" KB" : n+" bytes"; }
+
+  // Inspect the ORIGINAL file bytes: is it purely a valid image, or is there something stapled to it?
+  // High-signal, low-false-positive checks — NOT antivirus: (1) real image magic bytes / not another
+  // file type in disguise, (2) the file actually ENDS where the image format should end (no appended
+  // payload). Runs entirely on-device; the original bytes never leave the browser for this.
+  function inspectImageBytes(fileObj, cb){
+    var reader = new FileReader();
+    reader.onload = function(){ try { cb(analyzeImageBytes(new Uint8Array(reader.result), fileObj.type||"")); } catch(e){ cb({anomaly:false,reasons:[]}); } };
+    reader.onerror = function(){ cb({anomaly:false,reasons:[]}); };
+    reader.readAsArrayBuffer(fileObj);
+  }
+
+  function analyzeImageBytes(b, declaredType){
+    var n = b.length, reasons = [];
+    function eq(off, arr){ for(var i=0;i<arr.length;i++){ if(b[off+i]!==arr[i]) return false; } return true; }
+    function ascii(off, len){ var s=""; for(var i=off;i<off+len && i<n;i++) s+=String.fromCharCode(b[i]); return s; }
+
+    // (1) A non-image file wearing an image's clothing → strong warning.
+    if(n>=4 && eq(0,[0x25,0x50,0x44,0x46])) return {anomaly:true, reasons:["The file is actually a PDF, not a real image."]};
+    if(n>=2 && b[0]===0x4D && b[1]===0x5A) return {anomaly:true, reasons:["The file is actually a Windows program (.exe), not an image."]};
+    if(n>=4 && eq(0,[0x50,0x4B,0x03,0x04])) return {anomaly:true, reasons:["The file is actually a ZIP archive, not an image."]};
+    var head = ascii(0, Math.min(80,n)).toLowerCase();
+    if(head.indexOf("<html")>=0 || head.indexOf("<script")>=0 || head.indexOf("<?php")>=0 || head.indexOf("<!doctype")>=0)
+      return {anomaly:true, reasons:["The file contains web page / script code, not just an image."]};
+
+    // Detect the real format from magic bytes.
+    var fmt = null;
+    if(n>=3 && b[0]===0xFF && b[1]===0xD8 && b[2]===0xFF) fmt="jpeg";
+    else if(n>=8 && eq(0,[0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A])) fmt="png";
+    else if(n>=6 && (ascii(0,6)==="GIF87a" || ascii(0,6)==="GIF89a")) fmt="gif";
+    else if(n>=12 && eq(0,[0x52,0x49,0x46,0x46]) && ascii(8,4)==="WEBP") fmt="webp";
+    else if(n>=2 && b[0]===0x42 && b[1]===0x4D) fmt="bmp";
+    else if(n>=12 && ascii(4,4)==="ftyp") fmt="heic";
+    if(!fmt) return {anomaly:true, reasons:["This file doesn't look like a normal image format."]};
+
+    // (2) Does the file END where the image should? Appended payloads leave trailing data.
+    function trailingWarn(endIdx){
+      if(endIdx>0 && n-endIdx > 64){
+        var t = n-endIdx, extra = [ "There are about "+formatBytes(t)+" of extra hidden data after the picture ends." ];
+        if(b[endIdx]===0x50 && b[endIdx+1]===0x4B) extra.push("The hidden data looks like a ZIP archive.");
+        else if(b[endIdx]===0x4D && b[endIdx+1]===0x5A) extra.push("The hidden data looks like a program file.");
+        else { var th = ascii(endIdx, 64).toLowerCase(); if(th.indexOf("<script")>=0||th.indexOf("<html")>=0||th.indexOf("<?php")>=0) extra.push("The hidden data contains web/script code."); }
+        return {anomaly:true, reasons:extra};
+      }
+      return {anomaly:false, reasons:[]};
+    }
+    if(fmt==="jpeg"){
+      // Clean JPEG ends with FFD9 (allow a few bytes of trailing padding).
+      var eoi=-1; for(var i=n-2;i>=Math.max(2,n-16);i--){ if(b[i]===0xFF && b[i+1]===0xD9){ eoi=i+2; break; } }
+      if(eoi<0){ // EOI not near the end → find last EOI overall to size the trailing block
+        for(var j=n-2;j>=2;j--){ if(b[j]===0xFF && b[j+1]===0xD9){ eoi=j+2; break; } }
+        return eoi<0 ? {anomaly:true,reasons:["The image data looks truncated or altered."]} : trailingWarn(eoi);
+      }
+      return {anomaly:false, reasons:[]};
+    }
+    if(fmt==="png"){
+      // Clean PNG ends with IEND + its 4-byte CRC: 49 45 4E 44 AE 42 60 82.
+      if(n>=8 && eq(n-8,[0x49,0x45,0x4E,0x44,0xAE,0x42,0x60,0x82])) return {anomaly:false,reasons:[]};
+      for(var k=n-8;k>=8;k--){ if(b[k]===0x49&&b[k+1]===0x45&&b[k+2]===0x4E&&b[k+3]===0x44){ return trailingWarn(k+8); } }
+      return {anomaly:true, reasons:["The image data looks truncated or altered."]};
+    }
+    if(fmt==="webp"){
+      // RIFF size field (bytes 4-7, little-endian) = total file size minus 8.
+      var riff = b[4] | (b[5]<<8) | (b[6]<<16) | (b[7]*16777216);
+      if(n > riff+8+64) return trailingWarn(riff+8);
+      return {anomaly:false,reasons:[]};
+    }
+    if(fmt==="gif"){
+      // Clean GIF ends with the 0x3B trailer.
+      for(var g=n-1;g>=Math.max(6,n-4);g--){ if(b[g]===0x3B) return {anomaly:false,reasons:[]}; }
+      for(var h=n-1;h>=6;h--){ if(b[h]===0x3B) return trailingWarn(h+1); }
+      return {anomaly:false,reasons:[]};
+    }
+    return {anomaly:false, reasons:[]}; // bmp/heic: no trailing check in v1
   }
 
   // Downscale big phone photos (often 3-8MB) to keep the upload small and OCR clean.
